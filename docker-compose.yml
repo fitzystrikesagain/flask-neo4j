@@ -1,0 +1,29 @@
+version: "3.6"
+
+services:
+  flask:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flask-demo
+    depends_on:
+      - neo4j-demo
+    env_file:
+      - ./flask-api/.env
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+    volumes:
+      - ./flask-api:/usr/src/app/
+  neo4j-demo:
+    image: neo4j:latest
+    container_name: neo4j-demo
+    env_file:
+      - ./flask-api/.env
+    cap_add:
+      - SYS_RESOURCE
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+    - ./data:/data
